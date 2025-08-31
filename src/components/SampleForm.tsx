@@ -1,7 +1,7 @@
 'use client';
 
 import { Container, Typography, Button, Box } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FieldProps } from 'formik';
 import * as yup from 'yup';
 
 const validationSchema = yup.object({
@@ -34,7 +34,7 @@ export default function SampleForm() {
             <Form>
               <Box sx={{ mt: 3 }}>
                 <Field name="name">
-                  {({ field }: any) => (
+                  {({ field }: FieldProps) => (
                     <Box sx={{ mb: 2 }}>
                       <input
                         {...field}
@@ -57,7 +57,7 @@ export default function SampleForm() {
                 </Field>
                 
                 <Field name="email">
-                  {({ field }: any) => (
+                  {({ field }: FieldProps) => (
                     <Box sx={{ mb: 2 }}>
                       <input
                         {...field}
