@@ -1,5 +1,5 @@
-import SampleForm from '@/components/SampleForm';
+import SampleForm from '@/components/SampleForm'
 
 export default function Home() {
-  return <SampleForm />;
+  return <SampleForm />
 }

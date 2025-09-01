@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { Box, Typography, Paper } from '@mui/material';
-import { formatCurrency } from '../utils/costCalculation';
+import { Box, Typography, Paper } from '@mui/material'
+import { formatCurrency } from '../utils/costCalculation'
 
 interface CostFooterProps {
-  totalCost: number;
+  totalCost: number
 }
 
 export default function CostFooter({ totalCost }: CostFooterProps) {
@@ -18,7 +18,7 @@ export default function CostFooter({ totalCost }: CostFooterProps) {
         backgroundColor: 'primary.main', // Uses the green theme color
         zIndex: 1000,
         py: 2,
-        px: 3
+        px: 3,
       }}
     >
       <Box
@@ -27,14 +27,14 @@ export default function CostFooter({ totalCost }: CostFooterProps) {
           justifyContent: 'space-between',
           alignItems: 'center',
           maxWidth: 'sm',
-          mx: 'auto'
+          mx: 'auto',
         }}
       >
         <Typography
           variant="h6"
           sx={{
             color: 'white',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
           }}
         >
           Estimated Total:
@@ -43,12 +43,12 @@ export default function CostFooter({ totalCost }: CostFooterProps) {
           variant="h5"
           sx={{
             color: 'white',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
           }}
         >
           {formatCurrency(totalCost)}
         </Typography>
       </Box>
     </Paper>
-  );
+  )
 }

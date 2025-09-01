@@ -1,22 +1,20 @@
-'use client';
+'use client'
 
-import { Card, CardContent } from '@mui/material';
-import { ReactNode } from 'react';
+import { Card, CardContent } from '@mui/material'
+import { ReactNode } from 'react'
 
 interface FormSectionProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 export default function FormSection({ children }: FormSectionProps) {
   return (
-    <Card 
+    <Card
       sx={{
-        backgroundColor: 'rgb(244, 243, 239)'
+        backgroundColor: 'rgb(244, 243, 239)',
       }}
     >
-      <CardContent>
-        {children}
-      </CardContent>
+      <CardContent>{children}</CardContent>
     </Card>
-  );
+  )
 }

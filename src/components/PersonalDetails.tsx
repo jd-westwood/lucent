@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   FormControl,
@@ -6,42 +6,53 @@ import {
   TextField,
   Typography,
   Stack,
-  Box
-} from '@mui/material';
-import { Field, FieldProps } from 'formik';
+  Box,
+} from '@mui/material'
+import { Field, FieldProps } from 'formik'
+import { textConfig } from '../config/text'
 
 interface PersonalDetailsProps {
-  errors: any;
-  touched: any;
+  errors: Record<string, string>
+  touched: Record<string, boolean>
 }
 
-export default function PersonalDetails({ errors, touched }: PersonalDetailsProps) {
+export default function PersonalDetails({
+  errors,
+  touched,
+}: PersonalDetailsProps) {
   return (
     <FormControl component="fieldset">
-      <FormLabel component="legend">Personal Details</FormLabel>
+      <FormLabel component="legend">
+        {textConfig.form.fieldsets.personalDetails.title}
+      </FormLabel>
 
       <Stack spacing={4}>
         <Box>
-        <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-          Please provide your contact information to receive your detailed quote.
-        </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+            {textConfig.form.fieldsets.personalDetails.description}
+          </Typography>
 
-        <Field name="email">
-        {({ field }: FieldProps) => (
-          <TextField
-            {...field}
-            fullWidth
-            type="email"
-            label="Email Address"
-            placeholder="Enter your email for the detailed quote"
-            sx={{}}
-            error={errors.email && touched.email}
-            helperText={errors.email && touched.email && errors.email}
-          />
-        )}
-        </Field>
+          <Field name="email">
+            {({ field }: FieldProps) => (
+              <TextField
+                {...field}
+                fullWidth
+                type="email"
+                label={
+                  textConfig.form.fieldsets.personalDetails.fields.email.label
+                }
+                placeholder={
+                  textConfig.form.fieldsets.personalDetails.fields.email
+                    .placeholder
+                }
+                sx={{}}
+                error={!!(errors.email && touched.email)}
+                helperText={errors.email && touched.email && errors.email}
+              />
+            )}
+          </Field>
         </Box>
       </Stack>
     </FormControl>
-  );
+  )
 }
