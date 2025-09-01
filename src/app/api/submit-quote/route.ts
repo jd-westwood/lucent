@@ -4,11 +4,17 @@ import { pricingConfig } from '@/config/pricing'
 import { calculateTotalCost, formatCurrency } from '@/utils/costCalculation'
 import { textConfig } from '@/config/text'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json()
+    
+    // Only create Resend instance when we actually need to send emails
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json(
+        { error: 'Email service not configured' },
+        { status: 500 }
+      )
+    }
 
     // Calculate total cost
     const totalCost = calculateTotalCost(formData)
@@ -360,6 +366,9 @@ export async function POST(request: NextRequest) {
       <hr>
       <p><small>Quote generated on: ${new Date().toLocaleString()}</small></p>
     `
+
+    // Create Resend instance only when needed
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
     // Send email to business
     await resend.emails.send({

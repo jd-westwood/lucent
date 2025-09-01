@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { Container, Typography, Button, Box, Stack } from '@mui/material'
@@ -16,18 +17,18 @@ import { calculateTotalCost, FormValues } from '../utils/costCalculation'
 import { textConfig } from '../config/text'
 
 interface FormContentProps {
-  errors: Record<string, string>
-  touched: Record<string, boolean>
+  errors: any
+  touched: any
   isSubmitting: boolean
   values: FormValues
   setFieldValue: (field: string, value: unknown) => void
-  status: { type: string; message: string } | null
-  validateForm: () => Promise<Record<string, string>>
-  setTouched: (touched: Record<string, boolean>) => void
+  status?: { type: string; message: string } | null
+  validateForm: () => Promise<any>
+  setTouched: (touched: any) => void
   submitForm: () => void
   handleSubmitWithValidation: (
-    validateForm: () => Promise<Record<string, string>>,
-    setTouched: (touched: Record<string, boolean>) => void,
+    validateForm: () => Promise<any>,
+    setTouched: (touched: any) => void,
     submitForm: () => void,
     e: React.FormEvent
   ) => void
@@ -148,8 +149,8 @@ const validationSchema = yup.object({
 export default function SampleForm() {
   const handleSubmitWithValidation = useCallback(
     async (
-      validateForm: () => Promise<Record<string, string>>,
-      setTouched: (touched: Record<string, boolean>) => void,
+      validateForm: () => Promise<any>,
+      setTouched: (touched: any) => void,
       submitForm: () => void,
       e: React.FormEvent
     ) => {

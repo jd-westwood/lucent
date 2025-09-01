@@ -17,7 +17,6 @@ import {
 import { Field, FieldProps } from 'formik'
 import { pricingConfig } from '../config/pricing'
 import { textConfig } from '../config/text'
-
 interface OptionalExtrasProps {
   values: Record<string, unknown>
   setFieldValue: (field: string, value: unknown) => void
@@ -261,7 +260,8 @@ export default function OptionalExtras({
                       label={`Hair Restyle (£${pricingConfig.optionalExtras.eveningRestyle.hairRestyle})`}
                       onChange={(e) => {
                         const checked = (e.target as HTMLInputElement).checked
-                        const currentServices = values.eveningRestyle as string[]
+                        const currentServices =
+                          values.eveningRestyle as string[]
                         const newServices = checked
                           ? [...currentServices, 'hairRestyle']
                           : currentServices.filter(
@@ -275,7 +275,8 @@ export default function OptionalExtras({
                       label={`Makeup Restyle (£${pricingConfig.optionalExtras.eveningRestyle.makeupRestyle})`}
                       onChange={(e) => {
                         const checked = (e.target as HTMLInputElement).checked
-                        const currentServices = values.eveningRestyle as string[]
+                        const currentServices =
+                          values.eveningRestyle as string[]
                         const newServices = checked
                           ? [...currentServices, 'makeupRestyle']
                           : currentServices.filter(
@@ -289,7 +290,8 @@ export default function OptionalExtras({
                       label={`Hair & Makeup Restyle (£${pricingConfig.optionalExtras.eveningRestyle.hairMakeupRestyle})`}
                       onChange={(e) => {
                         const checked = (e.target as HTMLInputElement).checked
-                        const currentServices = values.eveningRestyle as string[]
+                        const currentServices =
+                          values.eveningRestyle as string[]
                         const newServices = checked
                           ? [...currentServices, 'hairMakeupRestyle']
                           : currentServices.filter(

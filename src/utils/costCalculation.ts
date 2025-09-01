@@ -30,6 +30,7 @@ export interface FormValues {
   clipInExtensions: string
   splitLocation: string
   overnightAccommodation: string
+  [key: string]: unknown
 }
 
 export function calculateTotalCost(values: FormValues): number {
