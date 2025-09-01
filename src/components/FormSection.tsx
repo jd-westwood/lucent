@@ -10,8 +10,7 @@ interface FormSectionProps {
 export default function FormSection({ children }: FormSectionProps) {
   return (
     <Card 
-      sx={{ 
-        mb: 3, 
+      sx={{
         backgroundColor: 'rgb(244, 243, 239)'
       }}
     >

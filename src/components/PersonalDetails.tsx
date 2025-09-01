@@ -4,7 +4,9 @@ import {
   FormControl,
   FormLabel,
   TextField,
-  Typography
+  Typography,
+  Stack,
+  Box
 } from '@mui/material';
 import { Field, FieldProps } from 'formik';
 
@@ -15,14 +17,16 @@ interface PersonalDetailsProps {
 
 export default function PersonalDetails({ errors, touched }: PersonalDetailsProps) {
   return (
-    <FormControl component="fieldset" sx={{ mb: 3 }}>
+    <FormControl component="fieldset">
       <FormLabel component="legend">Personal Details</FormLabel>
-      
-      <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-        Please provide your contact information to receive your detailed quote.
-      </Typography>
 
-      <Field name="email">
+      <Stack spacing={4}>
+        <Box>
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+          Please provide your contact information to receive your detailed quote.
+        </Typography>
+
+        <Field name="email">
         {({ field }: FieldProps) => (
           <TextField
             {...field}
@@ -30,12 +34,14 @@ export default function PersonalDetails({ errors, touched }: PersonalDetailsProp
             type="email"
             label="Email Address"
             placeholder="Enter your email for the detailed quote"
-            sx={{ mb: 3 }}
+            sx={{}}
             error={errors.email && touched.email}
             helperText={errors.email && touched.email && errors.email}
           />
         )}
-      </Field>
+        </Field>
+        </Box>
+      </Stack>
     </FormControl>
   );
 }

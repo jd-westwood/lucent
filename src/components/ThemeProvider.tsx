@@ -37,6 +37,23 @@ const theme = createTheme({
         elevation: 0,
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          '&.MuiFormLabel-root': {
+            color: 'rgb(48, 72, 72)',
+            fontWeight: 'bold',
+          },
+        },
+      },
+    },
   },
 });
 

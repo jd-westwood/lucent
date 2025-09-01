@@ -4,29 +4,21 @@ import {
   Container, 
   Typography, 
   Button, 
-  Box, 
-  RadioGroup, 
-  FormControlLabel, 
-  Radio, 
-  FormControl, 
-  FormLabel, 
-  Checkbox, 
-  TextField, 
-  Select, 
-  MenuItem, 
-  InputLabel,
-  FormGroup,
-  Divider
+  Box,
+  Stack
 } from '@mui/material';
-import { Formik, Form, Field, FieldProps } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 import validator from 'validator';
+import { useCallback, useMemo } from 'react';
 import BridalInformation from './BridalInformation';
 import WeddingPartyServices from './WeddingPartyServices';
 import OptionalExtras from './OptionalExtras';
 import Location from './Location';
 import PersonalDetails from './PersonalDetails';
 import FormSection from './FormSection';
+import CostFooter from './CostFooter';
+import { calculateTotalCost, FormValues } from '../utils/costCalculation';
 
 const validationSchema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
@@ -35,14 +27,43 @@ const validationSchema = yup.object({
   bridalPackage: yup.string().required('Bridal package is required'),
   bridalPreview: yup.string().required('Please specify if bridal preview is required'),
   location: yup.string()
-    .required('Location/postcode is required')
     .test('is-valid-postcode', 'Please enter a valid UK postcode (e.g., SW1A 1AA)', (value) => {
-      if (!value) return false;
+      if (!value) return true; // Allow empty values
       return validator.isPostalCode(value, 'GB');
     }),
 });
 
 export default function SampleForm() {
+  const handleSubmitWithValidation = useCallback(async (validateForm: () => Promise<any>, setTouched: (touched: any) => void, submitForm: () => void, e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate the form and get errors
+    const formErrors = await validateForm();
+    
+    // If there are validation errors, mark all fields as touched and scroll to first error
+    if (Object.keys(formErrors).length > 0) {
+      // Mark all fields as touched to show validation errors
+      setTouched({
+        email: true,
+        numberOfBrides: true,
+        bridalServices: true,
+        bridalPackage: true,
+        bridalPreview: true,
+        location: true
+      });
+      
+      const firstErrorField = Object.keys(formErrors)[0];
+      const errorElement = document.querySelector(`[name="${firstErrorField}"]`);
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+    
+    // If no errors, submit the form using Formik's submitForm
+    submitForm();
+  }, []);
+
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 4, mb: 4 }}>
@@ -81,7 +102,7 @@ export default function SampleForm() {
             numberOfBrides: '1',
             bridalServices: 'hairMakeup',
             bridalPackage: 'essential',
-            bridalPreview: '',
+            bridalPreview: 'yes',
             rehearsalDinner: false,
             postWedding: false,
             weddingPartyPreview: {
@@ -104,23 +125,49 @@ export default function SampleForm() {
             eveningRestyle: [],
             stripLashes: 0,
             touchUpKit: 0,
-            clipInExtensions: '',
-            splitLocation: '',
-            overnightAccommodation: '',
+            clipInExtensions: 'no',
+            splitLocation: 'no',
+            overnightAccommodation: 'no',
             location: ''
           }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
+          onSubmit={async (values, { setSubmitting, setStatus, setTouched }) => {
+            try {
+              setStatus(null);
+              
+              const response = await fetch('/api/submit-quote', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+              });
+              
+              const data = await response.json();
+              
+              if (response.ok) {
+                setStatus({ type: 'success', message: 'Quote request sent successfully! We\'ll get back to you soon.' });
+              } else {
+                setStatus({ type: 'error', message: data.error || 'Failed to send quote request.' });
+              }
+            } catch (error) {
+              setStatus({ type: 'error', message: 'Network error. Please check your connection and try again.' });
+            } finally {
               setSubmitting(false);
-            }, 400);
+            }
           }}
         >
-          {({ errors, touched, isSubmitting, values, setFieldValue }) => (
-            <Form>
+          {({ errors, touched, isSubmitting, values, setFieldValue, status, validateForm, setTouched, submitForm }) => {
+            const totalCost = useMemo(() => {
+              return calculateTotalCost(values as FormValues);
+            }, [values]);
+
+            return (
+              <>
+                <Form onSubmit={(e) => handleSubmitWithValidation(validateForm, setTouched, submitForm, e)}>
               <Box sx={{ mt: 3 }}>
                 {/* Personal Details */}
+                <Stack spacing={3}>
                 <FormSection>
                   <PersonalDetails errors={errors} touched={touched} />
                 </FormSection>
@@ -144,20 +191,41 @@ export default function SampleForm() {
                 <FormSection>
                   <Location errors={errors} touched={touched} />
                 </FormSection>
+                </Stack>
 
+                {/* Status Messages */}
+                {status && (
+                  <Box sx={{ mb: 3 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        p: 2,
+                        borderRadius: 1,
+                        backgroundColor: status.type === 'success' ? '#d4edda' : '#f8d7da',
+                        color: status.type === 'success' ? '#155724' : '#721c24',
+                        border: status.type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb',
+                      }}
+                    >
+                      {status.message}
+                    </Typography>
+                  </Box>
+                )}
                 
                 <Button
                   type="submit"
                   variant="contained"
                   disabled={isSubmitting}
                   fullWidth
-                  sx={{ mt: 2, py: 2 }}
+                  sx={{ mt: 2, py: 2, mb: 10 }}
                 >
-                  Get Quote
+                  {isSubmitting ? 'Sending Quote Request...' : 'Get Quote'}
                 </Button>
-              </Box>
-            </Form>
-          )}
+                </Box>
+                </Form>
+                <CostFooter totalCost={totalCost} />
+              </>
+            );
+          }}
         </Formik>
       </Box>
     </Container>

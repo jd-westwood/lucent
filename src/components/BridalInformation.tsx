@@ -11,9 +11,11 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Checkbox
+  Checkbox,
+  Stack
 } from '@mui/material';
 import { Field, FieldProps } from 'formik';
+import { pricingConfig } from '../config/pricing';
 
 interface BridalInformationProps {
   errors: any;
@@ -22,11 +24,12 @@ interface BridalInformationProps {
 
 export default function BridalInformation({ errors, touched }: BridalInformationProps) {
   return (
-    <FormControl component="fieldset" sx={{ mb: 3 }}>
+    <FormControl component="fieldset">
       <FormLabel component="legend">Bridal Information</FormLabel>
-      
-      {/* Number of Brides */}
-      <Box sx={{ mb: 3 }}>
+
+      <Stack spacing={4}>
+        <Box>
+        {/* Number of Brides */}
         <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>Number of Brides</Typography>
         <Field name="numberOfBrides">
           {({ field }: FieldProps) => (
@@ -42,31 +45,40 @@ export default function BridalInformation({ errors, touched }: BridalInformation
         {errors.numberOfBrides && touched.numberOfBrides && (
           <Typography color="error" variant="caption">{errors.numberOfBrides}</Typography>
         )}
-      </Box>
+        </Box>
 
+        <Box>
       {/* Bridal Services */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>Bridal Services (Prices start from £420)</Typography>
+        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
+          Bridal Services (Prices start from £{pricingConfig.bridal.services.hairMakeup.basePrice})
+        </Typography>
         <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
           Select the services required for each bride.
         </Typography>
         <Field name="bridalServices">
           {({ field }: FieldProps) => (
             <RadioGroup {...field}>
-              <FormControlLabel value="hairMakeup" control={<Radio />} label="Hair & Makeup" />
-              <FormControlLabel value="hairOnly" control={<Radio />} label="Hair only" />
-              <FormControlLabel value="makeupOnly" control={<Radio />} label="Makeup only" />
+              {Object.entries(pricingConfig.bridal.services).map(([key, service]) => (
+                <FormControlLabel 
+                  key={key}
+                  value={key} 
+                  control={<Radio />} 
+                  label={service.label} 
+                />
+              ))}
             </RadioGroup>
           )}
         </Field>
         {errors.bridalServices && touched.bridalServices && (
           <Typography color="error" variant="caption">{errors.bridalServices}</Typography>
         )}
-      </Box>
+        </Box>
 
+        <Box>
       {/* Bridal Package */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>Bridal Package (Packages start from £420)</Typography>
+        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
+          Bridal Package (Packages start from £{pricingConfig.bridal.packages.essential.price})
+        </Typography>
         <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
           Select your desired bridal package.{' '}
           <a 
@@ -80,22 +92,27 @@ export default function BridalInformation({ errors, touched }: BridalInformation
         <Field name="bridalPackage">
           {({ field }: FieldProps) => (
             <RadioGroup {...field}>
-              <FormControlLabel value="essential" control={<Radio />} label="Essential Radiance" />
-              <FormControlLabel value="elevated" control={<Radio />} label="Elevated Glow" />
-              <FormControlLabel value="lucent" control={<Radio />} label="Lucent Luxe" />
+              {Object.entries(pricingConfig.bridal.packages).map(([key, pkg]) => (
+                <FormControlLabel 
+                  key={key}
+                  value={key} 
+                  control={<Radio />} 
+                  label={`${pkg.label} (£${pkg.price})`} 
+                />
+              ))}
             </RadioGroup>
           )}
         </Field>
         {errors.bridalPackage && touched.bridalPackage && (
           <Typography color="error" variant="caption">{errors.bridalPackage}</Typography>
         )}
-      </Box>
+        </Box>
 
+        <Box>
       {/* Bridal Preview */}
-      <Box sx={{ mb: 3 }}>
         <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>Is a bridal preview (trial) required?</Typography>
         <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-          Previews are highly recommended. Prices start from £190.
+          Previews are highly recommended. Prices start from £{pricingConfig.bridal.preview.price}.
         </Typography>
         <Field name="bridalPreview">
           {({ field }: FieldProps) => (
@@ -108,18 +125,18 @@ export default function BridalInformation({ errors, touched }: BridalInformation
         {errors.bridalPreview && touched.bridalPreview && (
           <Typography color="error" variant="caption">{errors.bridalPreview}</Typography>
         )}
-      </Box>
+        </Box>
 
+        <Box>
       {/* Additional Services */}
-      <Box sx={{ mb: 3 }}>
         <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>Additional Services</Typography>
         
         <Field name="rehearsalDinner">
           {({ field }: FieldProps) => (
             <FormControlLabel 
               control={<Checkbox {...field} />} 
-              label="Rehearsal Dinner Hair & Makeup (£250)" 
-              sx={{ mb: 2, display: 'block' }}
+              label={`Rehearsal Dinner Hair & Makeup (£${pricingConfig.bridal.additionalServices.rehearsalDinner})`}
+              sx={{ display: 'block' }}
             />
           )}
         </Field>
@@ -128,12 +145,13 @@ export default function BridalInformation({ errors, touched }: BridalInformation
           {({ field }: FieldProps) => (
             <FormControlLabel 
               control={<Checkbox {...field} />} 
-              label="After Wedding Thank You Brunch Hair & Makeup (£250)" 
-              sx={{ mb: 3, display: 'block' }}
+              label={`After Wedding Thank You Brunch Hair & Makeup (£${pricingConfig.bridal.additionalServices.postWedding})`}
+              sx={{ display: 'block' }}
             />
           )}
         </Field>
-      </Box>
+        </Box>
+      </Stack>
     </FormControl>
   );
 }
