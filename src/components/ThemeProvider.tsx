@@ -10,8 +10,8 @@ const theme = createTheme({
       main: 'rgb(48, 72, 72)',
     },
     background: {
-      default: 'rgb(244, 243, 239)',
-      paper: 'rgb(244, 243, 239)',
+      default: '#e8e0cd',
+      paper: '#e8e0cd',
     },
     text: {
       primary: '#000000',
@@ -19,6 +19,24 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'Calmetta, var(--font-geist-sans), sans-serif',
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        a: {
+          textDecoration: 'underline',
+          color: 'rgb(48, 72, 72)',
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+      },
+    },
   },
 });
 
